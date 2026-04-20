@@ -31,9 +31,8 @@ RUN mkdir -p database \
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache database
+RUN chmod -R 777 storage bootstrap/cache database
 
 EXPOSE 8080
 
-CMD php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
+CMD php artisan config:clear || true && php artisan cache:clear || true && php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=8080
