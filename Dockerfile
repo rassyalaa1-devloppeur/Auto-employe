@@ -8,7 +8,12 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev \
     libonig-dev \
-    && docker-php-ext-install pdo pdo_sqlite mbstring bcmath \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install pdo pdo_sqlite mbstring bcmath gd \
     && a2enmod rewrite
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -25,6 +30,8 @@ RUN mkdir -p database \
     && mkdir -p storage/framework/sessions \
     && mkdir -p storage/framework/views \
     && mkdir -p bootstrap/cache
+
+RUN cp .env.example .env || true
 
 RUN composer install --no-dev --optimize-autoloader
 
