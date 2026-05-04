@@ -9,28 +9,26 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 
 class EmployesImport implements ToModel, WithHeadingRow, WithUpserts
 {
-    /**
-     * العمود اللي كيتحدد به التكرار
-     */
     public function uniqueBy()
     {
         return 'matricule';
     }
 
-    /**
-     * إنشاء أو تحديث الموظف
-     */
     public function model(array $row)
     {
+        if (empty($row['matricule'])) {
+            return null;
+        }
+
         return new Employe([
-            'societe' => $row['societe'],
-            'site' => $row['site'],
-            'departement' => $row['departement'],
+            'societe' => $row['societe'] ?? $row['société'] ?? $row['societe_'] ?? null,
+            'site' => $row['site'] ?? null,
+            'departement' => $row['departement'] ?? $row['département'] ?? null,
             'matricule' => $row['matricule'],
-            'activite_fonction' => $row['activite_fonction'],
-            'categorie' => $row['categorie'],
-            'nom' => $row['nom'],
-            'prenom' => $row['prenom'],
+            'activite_fonction' => $row['activite_fonction'] ?? $row['activité_fonction'] ?? $row['activitefonction'] ?? null,
+            'categorie' => $row['categorie'] ?? $row['catégorie'] ?? null,
+            'nom' => $row['nom'] ?? null,
+            'prenom' => $row['prenom'] ?? $row['prénom'] ?? null,
         ]);
     }
 }
