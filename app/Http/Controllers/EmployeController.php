@@ -81,16 +81,22 @@ class EmployeController extends Controller
     }
 
     public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
-        ]);
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv'
+    ]);
 
+    try {
         Excel::import(new EmployesImport, $request->file('file'));
 
-        return redirect()->back()->with('success', 'Import réussi 🎉');
-    }
+        return redirect()->route('employes.index')
+            ->with('success', 'Import réussi 🎉');
 
+    } catch (\Exception $e) {
+        return redirect()->route('employes.index')
+            ->with('error', 'Erreur import : ' . $e->getMessage());
+    }
+}
     public function export()
     {
         return Excel::download(new EmployesExport, 'employes.xlsx');
