@@ -19,7 +19,7 @@
         </ul>
     @endif
 
-    <form action="{{ route('employes.import') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ secure_url('/import') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <label>Choisir fichier Excel :</label>
